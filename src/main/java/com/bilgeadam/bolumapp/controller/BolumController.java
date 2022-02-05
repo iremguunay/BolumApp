@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,7 @@ public class BolumController {
 
     @GetMapping("/bolum")
     public List<Bolum> getBolumList() {
+
         return bolumRepository.findAll();
     }
 
@@ -41,6 +43,26 @@ public class BolumController {
 
         Bolum bolum = getBolum(no);
         return bolum.getAd();
+    }
+
+    @GetMapping("/bolum-sehir/{id}")
+    public String getBolumWithSehirAd(@PathVariable("id") long no) {
+
+        Bolum bolum = getBolum(no);
+
+        String sehirAd = getSehirAd(bolum.getNo());
+
+        return bolum.getSehirNo() + " " + sehirAd;
+    }
+
+    private String getSehirAd(long no) {
+
+        String sehirURL = "http://localhost:8240";
+
+        RestTemplate restTemplate = new RestTemplate();
+        String sehirAd = restTemplate.getForObject(sehirURL+"/sehir-ad/"+no, String.class);
+
+        return sehirAd;
     }
 
 }
