@@ -38,31 +38,4 @@ public class BolumController {
         return bolumRepository.findAll();
     }
 
-    @GetMapping("/bolum-ad/{id}")
-    public String getBolumAd(@PathVariable("id") long no) {
-
-        Bolum bolum = getBolum(no);
-        return bolum.getAd();
-    }
-
-    @GetMapping("/bolum-sehir/{id}")
-    public String getBolumWithSehirAd(@PathVariable("id") long no) {
-
-        Bolum bolum = getBolum(no);
-
-        String sehirAd = getSehirAd(bolum.getNo());
-
-        return bolum.getSehirNo() + " " + sehirAd;
-    }
-
-    private String getSehirAd(long no) {
-
-        String sehirURL = "http://localhost:8240";
-
-        RestTemplate restTemplate = new RestTemplate();
-        String sehirAd = restTemplate.getForObject(sehirURL+"/sehir-ad/"+no, String.class);
-
-        return sehirAd;
-    }
-
 }
